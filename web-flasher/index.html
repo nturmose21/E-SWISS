@@ -25,11 +25,11 @@
         --mono: "Space Mono", "Courier New", monospace;
         --display: "Syne", sans-serif;
       }
-
+ 
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
       html { min-height: 100%; background: var(--bg); }
-
+ 
       body {
         min-height: 100vh;
         color: var(--fg);
@@ -41,7 +41,7 @@
           var(--bg);
         overflow-x: hidden;
       }
-
+ 
       /* Scanline overlay */
       body::before {
         content: "";
@@ -57,7 +57,7 @@
         pointer-events: none;
         z-index: 100;
       }
-
+ 
       /* Subtle grid */
       body::after {
         content: "";
@@ -70,7 +70,7 @@
         pointer-events: none;
         z-index: 0;
       }
-
+ 
       .shell {
         position: relative;
         z-index: 1;
@@ -82,7 +82,7 @@
         grid-template-rows: auto 1fr auto;
         gap: 20px;
       }
-
+ 
       /* ── TOPBAR ── */
       .topbar {
         display: flex;
@@ -93,13 +93,13 @@
         background: rgba(12,16,24,0.8);
         backdrop-filter: blur(12px);
       }
-
+ 
       .brand {
         display: flex;
         align-items: center;
         gap: 12px;
       }
-
+ 
       .brand-mark {
         width: 32px;
         height: 32px;
@@ -112,7 +112,7 @@
         color: var(--bg);
         position: relative;
       }
-
+ 
       .brand-mark::after {
         content: "";
         position: absolute;
@@ -120,7 +120,7 @@
         border: 1px solid var(--accent);
         opacity: 0.3;
       }
-
+ 
       .brand-name {
         font-family: var(--display);
         font-size: 14px;
@@ -129,7 +129,7 @@
         text-transform: uppercase;
         color: var(--fg);
       }
-
+ 
       .brand-sub {
         font-size: 10px;
         color: var(--muted);
@@ -137,13 +137,13 @@
         text-transform: uppercase;
         margin-top: 2px;
       }
-
+ 
       .topbar-right {
         display: flex;
         align-items: center;
         gap: 20px;
       }
-
+ 
       .status-pill {
         display: flex;
         align-items: center;
@@ -157,7 +157,7 @@
         text-transform: uppercase;
         color: var(--accent);
       }
-
+ 
       .status-dot {
         width: 6px;
         height: 6px;
@@ -165,17 +165,17 @@
         border-radius: 50%;
         animation: pulse-dot 2s ease-in-out infinite;
       }
-
+ 
       .topbar-meta {
         font-size: 10px;
         color: var(--muted);
         letter-spacing: 0.12em;
         text-transform: uppercase;
       }
-
+ 
       /* ── MAIN GRID ── */
       main { align-self: center; }
-
+ 
       .layout {
         display: grid;
         grid-template-columns: 1fr 420px;
@@ -187,7 +187,7 @@
           0 40px 120px rgba(0,0,0,0.6),
           0 0 80px rgba(99,210,255,0.04);
       }
-
+ 
       /* ── LEFT PANEL ── */
       .panel-left {
         background: var(--surface);
@@ -196,7 +196,7 @@
         flex-direction: column;
         gap: 36px;
       }
-
+ 
       .hero-eyebrow {
         display: flex;
         align-items: center;
@@ -207,7 +207,7 @@
         text-transform: uppercase;
         color: var(--accent);
       }
-
+ 
       .hero-eyebrow::before {
         content: "";
         display: block;
@@ -215,7 +215,7 @@
         height: 1px;
         background: var(--accent);
       }
-
+ 
       .hero-title {
         font-family: var(--display);
         font-size: clamp(52px, 6vw, 80px);
@@ -225,20 +225,20 @@
         letter-spacing: -0.02em;
         color: var(--fg);
       }
-
+ 
       .hero-title em {
         font-style: normal;
         color: var(--accent);
         display: block;
       }
-
+ 
       .hero-desc {
         font-size: 13px;
         line-height: 1.7;
         color: var(--muted);
         max-width: 42ch;
       }
-
+ 
       /* Pre-flight */
       .preflight {
         display: flex;
@@ -247,7 +247,7 @@
         background: var(--border);
         border: 1px solid var(--border);
       }
-
+ 
       .preflight-header {
         display: flex;
         justify-content: space-between;
@@ -260,18 +260,18 @@
         text-transform: uppercase;
         color: var(--muted);
       }
-
+ 
       .preflight-header span:last-child {
         color: var(--dim);
       }
-
+ 
       .req-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1px;
         background: var(--border);
       }
-
+ 
       .req {
         background: var(--surface);
         padding: 14px 16px;
@@ -279,7 +279,7 @@
         flex-direction: column;
         gap: 5px;
       }
-
+ 
       .req-label {
         display: flex;
         align-items: center;
@@ -290,18 +290,18 @@
         text-transform: uppercase;
         color: var(--fg);
       }
-
+ 
       .req-icon {
         font-size: 14px;
         line-height: 1;
       }
-
+ 
       .req p {
         font-size: 11px;
         color: var(--muted);
         line-height: 1.5;
       }
-
+ 
       /* Sequence log */
       .seq {
         display: flex;
@@ -309,7 +309,7 @@
         gap: 1px;
         background: var(--border);
       }
-
+ 
       .seq-row {
         display: flex;
         align-items: center;
@@ -317,7 +317,7 @@
         background: var(--surface);
         min-height: 38px;
       }
-
+ 
       .seq-num {
         width: 52px;
         min-height: 38px;
@@ -329,14 +329,14 @@
         color: var(--accent);
         flex-shrink: 0;
       }
-
+ 
       .seq-text {
         padding: 10px 14px;
         font-size: 11px;
         color: var(--muted);
         line-height: 1.4;
       }
-
+ 
       /* ── RIGHT PANEL ── */
       .panel-right {
         background: var(--bg);
@@ -346,13 +346,13 @@
         gap: 28px;
         border-left: 1px solid var(--border);
       }
-
+ 
       .install-heading {
         display: flex;
         flex-direction: column;
         gap: 6px;
       }
-
+ 
       .install-heading h2 {
         font-family: var(--display);
         font-size: clamp(28px, 3vw, 38px);
@@ -361,13 +361,13 @@
         line-height: 0.95;
         letter-spacing: -0.01em;
       }
-
+ 
       .install-heading p {
         font-size: 11px;
         color: var(--muted);
         line-height: 1.6;
       }
-
+ 
       /* Installer widget frame */
       .flash-widget {
         border: 1px solid var(--border-bright);
@@ -376,7 +376,7 @@
         position: relative;
         overflow: hidden;
       }
-
+ 
       .flash-widget::before {
         content: "";
         position: absolute;
@@ -385,7 +385,7 @@
         background: linear-gradient(90deg, transparent, var(--accent), transparent);
         opacity: 0.6;
       }
-
+ 
       .flash-meta {
         display: flex;
         justify-content: space-between;
@@ -396,7 +396,7 @@
         letter-spacing: 0.12em;
         text-transform: uppercase;
       }
-
+ 
       .flash-meta-tag {
         display: flex;
         align-items: center;
@@ -405,7 +405,7 @@
         font-size: 10px;
         font-weight: 700;
       }
-
+ 
       .flash-meta-tag::before {
         content: "";
         width: 6px;
@@ -414,7 +414,7 @@
         transform: rotate(45deg);
         display: block;
       }
-
+ 
       .button-zone {
         background:
           repeating-linear-gradient(
@@ -428,7 +428,7 @@
         border: 1px solid var(--border-bright);
         padding: 8px;
       }
-
+ 
       esp-web-install-button {
         display: block;
         width: 100%;
@@ -436,7 +436,7 @@
         --esp-tools-button-text-color: var(--bg);
         --esp-tools-button-border-radius: 0;
       }
-
+ 
       esp-web-install-button::part(button),
       esp-web-install-button button,
       .connect-button {
@@ -460,11 +460,11 @@
         overflow: hidden;
         transition: filter 0.15s ease;
       }
-
+ 
       .connect-button:hover {
         filter: brightness(1.1);
       }
-
+ 
       .connect-button::after {
         content: "→";
         font-family: var(--mono);
@@ -473,7 +473,7 @@
         position: absolute;
         right: 20px;
       }
-
+ 
       /* Shimmer on button */
       .connect-button::before {
         content: "";
@@ -484,7 +484,7 @@
         background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
         animation: shimmer 3s ease-in-out infinite;
       }
-
+ 
       /* Checklist */
       .checklist {
         display: flex;
@@ -493,14 +493,14 @@
         background: var(--border);
         border: 1px solid var(--border);
       }
-
+ 
       .check-item {
         display: flex;
         align-items: stretch;
         background: var(--surface);
         min-height: 58px;
       }
-
+ 
       .check-num {
         width: 44px;
         display: grid;
@@ -511,7 +511,7 @@
         color: var(--dim);
         flex-shrink: 0;
       }
-
+ 
       .check-body {
         padding: 12px 16px;
         display: flex;
@@ -519,7 +519,7 @@
         justify-content: center;
         gap: 3px;
       }
-
+ 
       .check-title {
         font-size: 11px;
         font-weight: 700;
@@ -527,13 +527,13 @@
         text-transform: uppercase;
         color: var(--fg);
       }
-
+ 
       .check-desc {
         font-size: 11px;
         color: var(--muted);
         line-height: 1.4;
       }
-
+ 
       .check-badge {
         margin-left: auto;
         align-self: center;
@@ -544,7 +544,7 @@
         transform: rotate(45deg);
         flex-shrink: 0;
       }
-
+ 
       /* Metrics strip */
       .metrics {
         display: grid;
@@ -553,12 +553,12 @@
         background: var(--border);
         border: 1px solid var(--border);
       }
-
+ 
       .metric {
         background: var(--surface);
         padding: 14px 16px;
       }
-
+ 
       .metric-val {
         font-family: var(--display);
         font-size: 22px;
@@ -566,7 +566,7 @@
         color: var(--accent);
         line-height: 1;
       }
-
+ 
       .metric-label {
         font-size: 9px;
         font-weight: 700;
@@ -575,7 +575,7 @@
         color: var(--muted);
         margin-top: 6px;
       }
-
+ 
       /* ── BOTTOM BAR ── */
       .deck-bar {
         display: grid;
@@ -585,7 +585,7 @@
         border: 1px solid var(--border);
         margin-top: 2px;
       }
-
+ 
       .bar-cell {
         background: var(--surface);
         padding: 12px 20px;
@@ -598,11 +598,11 @@
         text-transform: uppercase;
         color: var(--muted);
       }
-
+ 
       .bar-cell span:last-child {
         color: var(--dim);
       }
-
+ 
       /* ── FOOTER ── */
       footer {
         display: flex;
@@ -613,32 +613,32 @@
         letter-spacing: 0.12em;
         text-transform: uppercase;
       }
-
+ 
       footer a { color: var(--muted); text-decoration: none; }
-
+ 
       /* ── ANIMATIONS ── */
       @keyframes pulse-dot {
         0%, 100% { opacity: 1; }
         50% { opacity: 0.3; }
       }
-
+ 
       @keyframes shimmer {
         0% { left: -100%; }
         50%, 100% { left: 150%; }
       }
-
+ 
       /* Staggered entrance */
       .panel-left, .panel-right {
         animation: fade-up 0.5s ease both;
       }
       .panel-right { animation-delay: 0.1s; }
       .deck-bar { animation: fade-up 0.5s 0.2s ease both; }
-
+ 
       @keyframes fade-up {
         from { opacity: 0; transform: translateY(12px); }
         to   { opacity: 1; transform: translateY(0); }
       }
-
+ 
       /* ── RESPONSIVE ── */
       @media (max-width: 860px) {
         .layout {
@@ -649,7 +649,7 @@
           border-top: 1px solid var(--border);
         }
       }
-
+ 
       @media (max-width: 560px) {
         .shell { padding: 14px; }
         .panel-left { padding: 28px 24px; }
@@ -659,7 +659,7 @@
         .deck-bar { grid-template-columns: 1fr; }
         .topbar-meta { display: none; }
       }
-
+ 
       @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after {
           animation-duration: 0.01ms !important;
@@ -671,7 +671,7 @@
   </head>
   <body>
     <div class="shell">
-
+ 
       <!-- TOPBAR -->
       <header class="topbar">
         <div class="brand">
@@ -689,11 +689,11 @@
           <div class="topbar-meta">ESP-Web-Tools v10</div>
         </div>
       </header>
-
+ 
       <!-- MAIN -->
       <main>
         <div class="layout">
-
+ 
           <!-- LEFT: Product info -->
           <div class="panel-left">
             <div>
@@ -708,7 +708,7 @@
               flash the latest firmware directly from your browser — no drivers,
               no CLI, no hassle.
             </p>
-
+ 
             <!-- Pre-flight checks -->
             <div class="preflight">
               <div class="preflight-header">
@@ -757,7 +757,7 @@
               </div>
             </div>
           </div>
-
+ 
           <!-- RIGHT: Installer -->
           <div class="panel-right">
             <div class="install-heading">
@@ -767,7 +767,7 @@
                 Hold BOOT while connecting if the device isn't detected.
               </p>
             </div>
-
+ 
             <!-- Flash widget -->
             <div class="flash-widget">
               <div class="flash-meta">
@@ -782,7 +782,7 @@
                 </esp-web-install-button>
               </div>
             </div>
-
+ 
             <!-- Checklist -->
             <div class="checklist">
               <div class="check-item">
@@ -810,7 +810,7 @@
                 <div class="check-badge"></div>
               </div>
             </div>
-
+ 
             <!-- Metrics -->
             <div class="metrics">
               <div class="metric">
@@ -828,7 +828,7 @@
             </div>
           </div>
         </div>
-
+ 
         <!-- Bottom status bar -->
         <div class="deck-bar">
           <div class="bar-cell">
@@ -845,7 +845,7 @@
           </div>
         </div>
       </main>
-
+ 
       <!-- FOOTER -->
       <footer>
         <span>© E-SWISS · Blackbox Installer Interface</span>
