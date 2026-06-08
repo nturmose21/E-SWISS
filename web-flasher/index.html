@@ -3,429 +3,437 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>E-SWISS Installer</title>
+    <title>E-SWISS · Firmware Installer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
     <style>
       :root {
-        color-scheme: dark;
-        --bg: #000;
-        --fg: #fff;
-        --soft: #cfcfcf;
-        --muted: #8e8e8e;
-        --dim: #5f5f5f;
-        --line: rgb(255 255 255 / 18%);
-        --line-hard: rgb(255 255 255 / 76%);
-        --panel: rgb(255 255 255 / 4%);
+        --bg: #06090f;
+        --surface: #0c1018;
+        --surface-raised: #111720;
+        --border: rgba(255,255,255,0.08);
+        --border-bright: rgba(255,255,255,0.18);
+        --border-active: rgba(99,210,255,0.45);
+        --fg: #f0f4ff;
+        --muted: #6b7a96;
+        --dim: #3a4558;
+        --accent: #63d2ff;
+        --accent-glow: rgba(99,210,255,0.15);
+        --accent-dim: rgba(99,210,255,0.06);
+        --success: #4dffb0;
+        --warn: #ffb347;
+        --mono: "Space Mono", "Courier New", monospace;
+        --display: "Syne", sans-serif;
       }
 
-      * {
-        box-sizing: border-box;
-      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-      html {
-        min-height: 100%;
-        background: var(--bg);
-      }
+      html { min-height: 100%; background: var(--bg); }
 
       body {
-        margin: 0;
         min-height: 100vh;
-        overflow-x: hidden;
-        background:
-          linear-gradient(rgb(255 255 255 / 4%) 1px, transparent 1px),
-          linear-gradient(90deg, rgb(255 255 255 / 4%) 1px, transparent 1px),
-          radial-gradient(circle at 50% 0%, rgb(255 255 255 / 12%), transparent 35rem),
-          #000;
-        background-size: 42px 42px, 42px 42px, auto, auto;
         color: var(--fg);
-        font-family:
-          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", sans-serif;
+        font-family: var(--mono);
+        font-size: 13px;
+        background:
+          radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99,210,255,0.07) 0%, transparent 60%),
+          radial-gradient(ellipse 40% 30% at 80% 100%, rgba(77,255,176,0.04) 0%, transparent 50%),
+          var(--bg);
+        overflow-x: hidden;
       }
 
-      body::before,
-      body::after {
+      /* Scanline overlay */
+      body::before {
+        content: "";
         position: fixed;
         inset: 0;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(0,0,0,0.12) 2px,
+          rgba(0,0,0,0.12) 4px
+        );
         pointer-events: none;
-        content: "";
+        z-index: 100;
       }
 
-      body::before {
-        background:
-          linear-gradient(90deg, transparent, rgb(255 255 255 / 8%), transparent)
-            0 0 / 26rem 100% no-repeat,
-          repeating-linear-gradient(
-            0deg,
-            rgb(255 255 255 / 3%) 0,
-            rgb(255 255 255 / 3%) 1px,
-            transparent 1px,
-            transparent 7px
-          );
-        animation: sweep 7s linear infinite;
-      }
-
+      /* Subtle grid */
       body::after {
-        margin: 18px;
-        border: 1px solid rgb(255 255 255 / 14%);
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+        background-size: 48px 48px;
+        pointer-events: none;
+        z-index: 0;
       }
 
       .shell {
         position: relative;
         z-index: 1;
-        width: min(1160px, calc(100vw - 32px));
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 24px 24px 32px;
         min-height: 100vh;
         display: grid;
         grid-template-rows: auto 1fr auto;
-        gap: 14px;
-        margin: 0 auto;
-        padding: 20px 0;
+        gap: 20px;
       }
 
-      .topbar,
-      .footer {
+      /* ── TOPBAR ── */
+      .topbar {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 14px;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 800;
-        text-transform: uppercase;
+        padding: 14px 20px;
+        border: 1px solid var(--border);
+        background: rgba(12,16,24,0.8);
+        backdrop-filter: blur(12px);
       }
 
       .brand {
-        display: inline-flex;
+        display: flex;
         align-items: center;
-        gap: 10px;
-        color: var(--fg);
+        gap: 12px;
       }
 
       .brand-mark {
-        width: 34px;
-        height: 34px;
+        width: 32px;
+        height: 32px;
+        background: var(--accent);
         display: grid;
         place-items: center;
-        background: var(--fg);
+        font-family: var(--display);
+        font-size: 16px;
+        font-weight: 900;
         color: var(--bg);
-        font-size: 15px;
-        font-weight: 950;
-      }
-
-      .signal {
-        display: inline-grid;
-        grid-template-columns: repeat(4, 10px);
-        gap: 5px;
-        align-items: end;
-        height: 16px;
-      }
-
-      .signal span {
-        display: block;
-        width: 10px;
-        border: 1px solid var(--fg);
-        background: var(--fg);
-        opacity: .42;
-        animation: pulse 1.8s ease-in-out infinite;
-      }
-
-      .signal span:nth-child(1) {
-        height: 5px;
-      }
-
-      .signal span:nth-child(2) {
-        height: 8px;
-        animation-delay: .12s;
-      }
-
-      .signal span:nth-child(3) {
-        height: 12px;
-        animation-delay: .24s;
-      }
-
-      .signal span:nth-child(4) {
-        height: 16px;
-        animation-delay: .36s;
-      }
-
-      main {
-        align-self: center;
-      }
-
-      .deck {
         position: relative;
-        min-height: 0;
-        display: grid;
-        grid-template-rows: auto 1fr auto;
-        border: 1px solid var(--line-hard);
-        background:
-          linear-gradient(135deg, rgb(255 255 255 / 10%), transparent 30%),
-          linear-gradient(rgb(255 255 255 / 4%), rgb(255 255 255 / 2%));
-        box-shadow: 0 30px 100px rgb(255 255 255 / 8%);
-        overflow: hidden;
       }
 
-      .deck::before {
+      .brand-mark::after {
+        content: "";
         position: absolute;
-        inset: 12px;
-        border: 1px solid rgb(255 255 255 / 12%);
-        pointer-events: none;
-        content: "";
+        inset: -3px;
+        border: 1px solid var(--accent);
+        opacity: 0.3;
       }
 
-      .deck::after {
-        position: absolute;
-        left: 36px;
-        right: 36px;
-        bottom: 120px;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, var(--line-hard), transparent);
-        opacity: .55;
-        content: "";
-      }
-
-      .deck-header {
-        position: relative;
-        z-index: 1;
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 18px;
-        align-items: center;
-        border-bottom: 1px solid var(--line);
-        padding: 18px clamp(22px, 4vw, 42px);
-      }
-
-      .eyebrow {
-        width: fit-content;
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        border: 1px solid var(--line-hard);
-        padding: 9px 12px;
-        color: var(--soft);
-        font-size: 11px;
-        font-weight: 900;
+      .brand-name {
+        font-family: var(--display);
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
+        color: var(--fg);
       }
 
-      .eyebrow::before,
-      .status::before {
-        width: 8px;
-        height: 8px;
-        background: var(--fg);
-        content: "";
-      }
-
-      .status {
-        display: inline-flex;
-        align-items: center;
-        justify-self: end;
-        gap: 9px;
-        border: 1px solid var(--line-hard);
-        padding: 9px 12px;
-        font-size: 11px;
-        font-weight: 900;
+      .brand-sub {
+        font-size: 10px;
+        color: var(--muted);
+        letter-spacing: 0.15em;
         text-transform: uppercase;
+        margin-top: 2px;
       }
 
-      .status::before {
-        animation: blink 1.2s steps(2, end) infinite;
-      }
-
-      .deck-body {
-        position: relative;
-        z-index: 1;
-        display: grid;
-        grid-template-columns: minmax(330px, .85fr) minmax(460px, 1.15fr);
-        gap: clamp(26px, 4vw, 48px);
-        align-items: start;
-        padding: clamp(24px, 3vw, 36px) clamp(22px, 5vw, 58px) 26px;
-      }
-
-      .product {
-        min-width: 0;
-      }
-
-      h1 {
-        max-width: 12ch;
-        margin: 0;
-        font-size: clamp(48px, 5vw, 76px);
-        line-height: .9;
-        letter-spacing: 0;
-        text-transform: uppercase;
-      }
-
-      .summary {
-        max-width: 620px;
-        margin: 18px 0 0;
-        color: #dedede;
-        font-size: clamp(16px, 1.55vw, 19px);
-        line-height: 1.48;
-      }
-
-      .utility-panel {
-        display: grid;
-        gap: 1px;
-        margin-top: 22px;
-        border: 1px solid var(--line);
-        background: var(--line);
-      }
-
-      .utility-head,
-      .requirement,
-      .log-row {
-        background: #030303;
-      }
-
-      .utility-head {
+      .topbar-right {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 14px;
-        padding: 14px 16px;
-        color: var(--soft);
-        font-size: 12px;
-        font-weight: 900;
+        gap: 20px;
+      }
+
+      .status-pill {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 12px;
+        border: 1px solid var(--border-active);
+        background: var(--accent-dim);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+        animation: pulse-dot 2s ease-in-out infinite;
+      }
+
+      .topbar-meta {
+        font-size: 10px;
+        color: var(--muted);
+        letter-spacing: 0.12em;
         text-transform: uppercase;
       }
 
-      .utility-head code {
+      /* ── MAIN GRID ── */
+      main { align-self: center; }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 1fr 420px;
+        gap: 2px;
+        border: 1px solid var(--border-bright);
+        background: var(--border);
+        box-shadow:
+          0 0 0 1px rgba(99,210,255,0.04),
+          0 40px 120px rgba(0,0,0,0.6),
+          0 0 80px rgba(99,210,255,0.04);
+      }
+
+      /* ── LEFT PANEL ── */
+      .panel-left {
+        background: var(--surface);
+        padding: 40px 44px 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 36px;
+      }
+
+      .hero-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .hero-eyebrow::before {
+        content: "";
+        display: block;
+        width: 20px;
+        height: 1px;
+        background: var(--accent);
+      }
+
+      .hero-title {
+        font-family: var(--display);
+        font-size: clamp(52px, 6vw, 80px);
+        font-weight: 900;
+        line-height: 0.88;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        color: var(--fg);
+      }
+
+      .hero-title em {
+        font-style: normal;
+        color: var(--accent);
+        display: block;
+      }
+
+      .hero-desc {
+        font-size: 13px;
+        line-height: 1.7;
         color: var(--muted);
-        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        max-width: 42ch;
+      }
+
+      /* Pre-flight */
+      .preflight {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+      }
+
+      .preflight-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 14px;
+        background: var(--surface-raised);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .preflight-header span:last-child {
+        color: var(--dim);
+      }
+
+      .req-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: var(--border);
+      }
+
+      .req {
+        background: var(--surface);
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .req-label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
         font-size: 11px;
         font-weight: 700;
-      }
-
-      .requirement-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1px;
-        background: var(--line);
-      }
-
-      .requirement {
-        min-height: 82px;
-        padding: 16px;
-      }
-
-      .requirement strong {
-        display: block;
-        font-size: 13px;
-        line-height: 1.2;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
+        color: var(--fg);
       }
 
-      .requirement span {
-        display: block;
-        margin-top: 8px;
+      .req-icon {
+        font-size: 14px;
+        line-height: 1;
+      }
+
+      .req p {
+        font-size: 11px;
         color: var(--muted);
-        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      /* Sequence log */
+      .seq {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        background: var(--border);
+      }
+
+      .seq-row {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        background: var(--surface);
+        min-height: 38px;
+      }
+
+      .seq-num {
+        width: 52px;
+        min-height: 38px;
+        display: grid;
+        place-items: center;
+        border-right: 1px solid var(--border);
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--accent);
+        flex-shrink: 0;
+      }
+
+      .seq-text {
+        padding: 10px 14px;
+        font-size: 11px;
+        color: var(--muted);
         line-height: 1.4;
       }
 
-      .terminal-log {
-        display: grid;
-        gap: 1px;
-        background: var(--line);
+      /* ── RIGHT PANEL ── */
+      .panel-right {
+        background: var(--bg);
+        padding: 32px 32px 36px;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        border-left: 1px solid var(--border);
       }
 
-      .log-row {
-        display: grid;
-        grid-template-columns: 76px 1fr;
-        min-height: 34px;
-        color: var(--muted);
-        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      .install-heading {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .install-heading h2 {
+        font-family: var(--display);
+        font-size: clamp(28px, 3vw, 38px);
+        font-weight: 900;
+        text-transform: uppercase;
+        line-height: 0.95;
+        letter-spacing: -0.01em;
+      }
+
+      .install-heading p {
         font-size: 11px;
+        color: var(--muted);
+        line-height: 1.6;
       }
 
-      .log-row b {
-        display: grid;
-        place-items: center;
-        border-right: 1px solid var(--line);
-        color: var(--fg);
+      /* Installer widget frame */
+      .flash-widget {
+        border: 1px solid var(--border-bright);
+        background: var(--surface);
+        padding: 18px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .flash-widget::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        opacity: 0.6;
+      }
+
+      .flash-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+        font-size: 10px;
+        color: var(--muted);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .flash-meta-tag {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--accent);
+        font-size: 10px;
         font-weight: 700;
       }
 
-      .log-row span {
-        display: grid;
-        align-items: center;
-        padding: 10px 12px;
-      }
-
-      .control {
-        display: grid;
-        gap: 18px;
-        min-width: 0;
-      }
-
-      .control-title {
-        display: grid;
-        gap: 10px;
-      }
-
-      h2 {
-        margin: 0;
-        font-size: clamp(34px, 3.8vw, 52px);
-        line-height: .95;
-        text-transform: uppercase;
-      }
-
-      .control-title p {
-        margin: 0;
-        color: var(--soft);
-        font-size: 15px;
-        line-height: 1.55;
-      }
-
-      .installer-frame {
-        position: relative;
-        border: 1px solid var(--line-hard);
-        background:
-          linear-gradient(90deg, transparent 0 14px, rgb(255 255 255 / 5%) 14px 15px, transparent 15px),
-          #030303;
-        padding: 16px;
-      }
-
-      .installer-frame::before {
-        position: absolute;
-        inset: -1px;
-        border: 1px solid var(--fg);
-        clip-path: polygon(0 0, 78px 0, 78px 2px, 2px 2px, 2px 78px, 0 78px);
-        pointer-events: none;
+      .flash-meta-tag::before {
         content: "";
+        width: 6px;
+        height: 6px;
+        border: 1px solid var(--accent);
+        transform: rotate(45deg);
+        display: block;
       }
 
-      .installer-label {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 14px;
-        color: var(--muted);
-        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-        font-size: 11px;
-        text-transform: uppercase;
-      }
-
-      .button-shell {
-        min-height: 70px;
-        display: grid;
-        place-items: stretch;
-        border: 1px solid rgb(255 255 255 / 42%);
+      .button-zone {
         background:
           repeating-linear-gradient(
-            0deg,
-            rgb(255 255 255 / 4%) 0 1px,
-            transparent 1px 9px
+            -45deg,
+            transparent,
+            transparent 4px,
+            rgba(255,255,255,0.015) 4px,
+            rgba(255,255,255,0.015) 8px
           ),
-          #000;
-        padding: 7px;
+          var(--bg);
+        border: 1px solid var(--border-bright);
+        padding: 8px;
       }
 
       esp-web-install-button {
-        width: 100%;
         display: block;
-        --esp-tools-button-color: #fff;
-        --esp-tools-button-text-color: #000;
+        width: 100%;
+        --esp-tools-button-color: var(--accent);
+        --esp-tools-button-text-color: var(--bg);
         --esp-tools-button-border-radius: 0;
       }
 
@@ -433,207 +441,229 @@
       esp-web-install-button button,
       .connect-button {
         width: 100%;
-        min-height: 56px;
-        border: 1px solid var(--fg);
+        min-height: 60px;
+        border: none;
         border-radius: 0;
-        background: var(--fg);
+        background: var(--accent);
         color: var(--bg);
-        font: 950 14px/1 system-ui, sans-serif;
+        font-family: var(--display);
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-      }
-
-      .connect-button {
+        cursor: pointer;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 0 18px;
-        cursor: pointer;
+        justify-content: center;
+        gap: 12px;
+        position: relative;
+        overflow: hidden;
+        transition: filter 0.15s ease;
+      }
+
+      .connect-button:hover {
+        filter: brightness(1.1);
       }
 
       .connect-button::after {
-        width: 34px;
-        height: 1px;
-        background: var(--bg);
-        box-shadow:
-          10px -7px 0 -4px var(--bg),
-          10px 7px 0 -4px var(--bg);
+        content: "→";
+        font-family: var(--mono);
+        font-size: 18px;
+        font-weight: 400;
+        position: absolute;
+        right: 20px;
+      }
+
+      /* Shimmer on button */
+      .connect-button::before {
         content: "";
+        position: absolute;
+        top: 0; left: -100%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+        animation: shimmer 3s ease-in-out infinite;
       }
 
-      .checks {
-        display: grid;
-        grid-template-columns: 1fr;
+      /* Checklist */
+      .checklist {
+        display: flex;
+        flex-direction: column;
         gap: 1px;
-        border: 1px solid var(--line);
-        background: var(--line);
+        background: var(--border);
+        border: 1px solid var(--border);
       }
 
-      .check {
-        min-height: 62px;
-        display: grid;
-        grid-template-columns: 40px 1fr;
-        background: #030303;
+      .check-item {
+        display: flex;
+        align-items: stretch;
+        background: var(--surface);
+        min-height: 58px;
       }
 
-      .check b {
+      .check-num {
+        width: 44px;
         display: grid;
         place-items: center;
-        border-right: 1px solid var(--line);
-        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-        font-size: 12px;
+        border-right: 1px solid var(--border);
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--dim);
+        flex-shrink: 0;
       }
 
-      .check span {
-        display: grid;
-        align-content: center;
-        gap: 4px;
-        padding: 14px;
+      .check-body {
+        padding: 12px 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 3px;
       }
 
-      .check strong {
-        font-size: 12px;
-        line-height: 1.2;
+      .check-title {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.10em;
         text-transform: uppercase;
+        color: var(--fg);
       }
 
-      .check small {
+      .check-desc {
+        font-size: 11px;
         color: var(--muted);
-        font-size: 12px;
-        line-height: 1.35;
+        line-height: 1.4;
       }
 
-      .deck-footer {
-        position: relative;
-        z-index: 1;
+      .check-badge {
+        margin-left: auto;
+        align-self: center;
+        margin-right: 14px;
+        width: 6px;
+        height: 6px;
+        border: 1px solid var(--dim);
+        transform: rotate(45deg);
+        flex-shrink: 0;
+      }
+
+      /* Metrics strip */
+      .metrics {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 1px;
-        border-top: 1px solid var(--line);
-        background: var(--line);
+        background: var(--border);
+        border: 1px solid var(--border);
       }
 
       .metric {
-        min-height: 72px;
-        padding: 14px clamp(16px, 3vw, 24px);
-        background: #030303;
+        background: var(--surface);
+        padding: 14px 16px;
       }
 
-      .metric strong {
-        display: block;
-        font-size: 24px;
+      .metric-val {
+        font-family: var(--display);
+        font-size: 22px;
+        font-weight: 900;
+        color: var(--accent);
         line-height: 1;
       }
 
-      .metric span {
-        display: block;
-        margin-top: 10px;
+      .metric-label {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
         color: var(--muted);
-        font-size: 11px;
-        font-weight: 900;
+        margin-top: 6px;
+      }
+
+      /* ── BOTTOM BAR ── */
+      .deck-bar {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
+        background: var(--border);
+        border: 1px solid var(--border);
+        margin-top: 2px;
+      }
+
+      .bar-cell {
+        background: var(--surface);
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .bar-cell span:last-child {
+        color: var(--dim);
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 10px;
+        color: var(--dim);
+        letter-spacing: 0.12em;
         text-transform: uppercase;
       }
 
-      .footer code {
-        color: var(--fg);
-        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      footer a { color: var(--muted); text-decoration: none; }
+
+      /* ── ANIMATIONS ── */
+      @keyframes pulse-dot {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
       }
 
-      @keyframes sweep {
-        from {
-          background-position: -30rem 0, 0 0;
-        }
-
-        to {
-          background-position: calc(100vw + 30rem) 0, 0 0;
-        }
+      @keyframes shimmer {
+        0% { left: -100%; }
+        50%, 100% { left: 150%; }
       }
 
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: .35;
-        }
+      /* Staggered entrance */
+      .panel-left, .panel-right {
+        animation: fade-up 0.5s ease both;
+      }
+      .panel-right { animation-delay: 0.1s; }
+      .deck-bar { animation: fade-up 0.5s 0.2s ease both; }
 
-        45% {
-          opacity: 1;
-        }
+      @keyframes fade-up {
+        from { opacity: 0; transform: translateY(12px); }
+        to   { opacity: 1; transform: translateY(0); }
       }
 
-      @keyframes blink {
-        50% {
-          opacity: .18;
-        }
-      }
-
-      @media (max-width: 980px) {
-        .deck {
-          min-height: auto;
-        }
-
-        .deck-body {
+      /* ── RESPONSIVE ── */
+      @media (max-width: 860px) {
+        .layout {
           grid-template-columns: 1fr;
         }
-
-        h1 {
-          max-width: 11ch;
+        .panel-right {
+          border-left: none;
+          border-top: 1px solid var(--border);
         }
       }
 
-      @media (max-width: 680px) {
-        body::after {
-          margin: 10px;
-        }
-
-        .shell {
-          width: min(100% - 24px, 620px);
-          min-height: auto;
-          padding: 18px 0;
-        }
-
-        .topbar,
-        .footer,
-        .deck-header {
-          align-items: flex-start;
-          grid-template-columns: 1fr;
-          flex-direction: column;
-        }
-
-        .status {
-          justify-self: start;
-        }
-
-        .deck-body {
-          padding: 22px;
-        }
-
-        h1 {
-          font-size: clamp(44px, 14vw, 64px);
-        }
-
-        .summary {
-          font-size: 16px;
-        }
-
-        .requirement-grid,
-        .checks,
-        .deck-footer {
-          grid-template-columns: 1fr;
-        }
-
-        .metric {
-          min-height: auto;
-        }
+      @media (max-width: 560px) {
+        .shell { padding: 14px; }
+        .panel-left { padding: 28px 24px; }
+        .panel-right { padding: 24px; }
+        .req-grid { grid-template-columns: 1fr; }
+        .metrics { grid-template-columns: 1fr 1fr 1fr; }
+        .deck-bar { grid-template-columns: 1fr; }
+        .topbar-meta { display: none; }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        *,
-        *::before,
-        *::after {
-          scroll-behavior: auto !important;
-          animation-duration: .01ms !important;
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
           animation-iteration-count: 1 !important;
-          transition-duration: .01ms !important;
         }
       }
     </style>
@@ -641,141 +671,185 @@
   </head>
   <body>
     <div class="shell">
-      <header class="topbar" aria-label="Installer status">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
         <div class="brand">
-          <span class="brand-mark">E</span>
-          <span>E-SWISS Firmware Console</span>
+          <div class="brand-mark">E</div>
+          <div>
+            <div class="brand-name">E-SWISS</div>
+            <div class="brand-sub">Firmware Console</div>
+          </div>
         </div>
-        <div class="signal" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
+        <div class="topbar-right">
+          <div class="status-pill">
+            <div class="status-dot"></div>
+            Ready
+          </div>
+          <div class="topbar-meta">ESP-Web-Tools v10</div>
         </div>
       </header>
 
+      <!-- MAIN -->
       <main>
-        <section class="deck" aria-labelledby="page-title">
-          <div class="deck-header">
-            <span class="eyebrow">Browser firmware uploader</span>
-            <span class="status">Ready</span>
+        <div class="layout">
+
+          <!-- LEFT: Product info -->
+          <div class="panel-left">
+            <div>
+              <div class="hero-eyebrow">Browser-based installer</div>
+              <h1 class="hero-title">
+                E-SWISS
+                <em>Firmware</em>
+              </h1>
+            </div>
+            <p class="hero-desc">
+              Plug in the E-SWISS controller, authorize the serial port, and
+              flash the latest firmware directly from your browser — no drivers,
+              no CLI, no hassle.
+            </p>
+
+            <!-- Pre-flight checks -->
+            <div class="preflight">
+              <div class="preflight-header">
+                <span>Pre-flight checklist</span>
+                <span>Before you flash</span>
+              </div>
+              <div class="req-grid">
+                <div class="req">
+                  <div class="req-label">
+                    <span class="req-icon">⬡</span> Chrome / Edge
+                  </div>
+                  <p>Web Serial API required. Firefox and Safari not supported.</p>
+                </div>
+                <div class="req">
+                  <div class="req-label">
+                    <span class="req-icon">⬡</span> Data USB cable
+                  </div>
+                  <p>Charge-only cables power the device but won't enumerate serial.</p>
+                </div>
+                <div class="req">
+                  <div class="req-label">
+                    <span class="req-icon">⬡</span> BOOT fallback
+                  </div>
+                  <p>Hold BOOT while plugging in if the port isn't listed.</p>
+                </div>
+                <div class="req">
+                  <div class="req-label">
+                    <span class="req-icon">⬡</span> Stay connected
+                  </div>
+                  <p>Do not unplug until the installer reports success.</p>
+                </div>
+              </div>
+              <div class="seq">
+                <div class="seq-row">
+                  <div class="seq-num">01</div>
+                  <div class="seq-text">Load manifest.json and resolve firmware offsets.</div>
+                </div>
+                <div class="seq-row">
+                  <div class="seq-num">02</div>
+                  <div class="seq-text">Request browser permission for the serial port.</div>
+                </div>
+                <div class="seq-row">
+                  <div class="seq-num">03</div>
+                  <div class="seq-text">Erase flash, write firmware, verify, and reboot.</div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div class="deck-body">
-            <div class="product">
-              <h1 id="page-title">E-SWISS Installer</h1>
-              <p class="summary">
-                Plug in the E-SWISS controller, authorize the serial port, and
-                flash the latest firmware from one focused command panel.
+          <!-- RIGHT: Installer -->
+          <div class="panel-right">
+            <div class="install-heading">
+              <h2>Install Firmware</h2>
+              <p>
+                Use Chrome or Edge with a data-capable USB cable.
+                Hold BOOT while connecting if the device isn't detected.
               </p>
+            </div>
 
-              <div class="utility-panel" aria-label="Pre-flight requirements">
-                <div class="utility-head">
-                  <span>Pre-flight check</span>
-                  <code>before flashing</code>
-                </div>
-                <div class="requirement-grid">
-                  <div class="requirement">
-                    <strong>Chrome or Edge</strong>
-                    <span>Web Serial is required for browser-based flashing.</span>
-                  </div>
-                  <div class="requirement">
-                    <strong>Data USB cable</strong>
-                    <span>Charge-only cables will power the device but fail to connect.</span>
-                  </div>
-                  <div class="requirement">
-                    <strong>BOOT fallback</strong>
-                    <span>Hold BOOT while plugging in if the serial port is not listed.</span>
-                  </div>
-                  <div class="requirement">
-                    <strong>Keep connected</strong>
-                    <span>Do not unplug the controller until the installer reports success.</span>
-                  </div>
-                </div>
-                <div class="terminal-log" aria-label="Install sequence">
-                  <div class="log-row">
-                    <b>01</b>
-                    <span>Open manifest.json and prepare firmware offsets.</span>
-                  </div>
-                  <div class="log-row">
-                    <b>02</b>
-                    <span>Ask the browser for serial-port permission.</span>
-                  </div>
-                  <div class="log-row">
-                    <b>03</b>
-                    <span>Erase, write, verify, and reboot the controller.</span>
-                  </div>
-                </div>
+            <!-- Flash widget -->
+            <div class="flash-widget">
+              <div class="flash-meta">
+                <span>manifest.json</span>
+                <span class="flash-meta-tag">Secure serial</span>
+              </div>
+              <div class="button-zone">
+                <esp-web-install-button manifest="manifest.json">
+                  <button class="connect-button" slot="activate">
+                    Connect &amp; Flash
+                  </button>
+                </esp-web-install-button>
               </div>
             </div>
 
-            <div class="control">
-              <div class="control-title">
-                <h2>Install Command</h2>
-                <p>
-                  Use Chrome or Edge with a data-capable USB cable. If the
-                  device is not found, hold BOOT while connecting.
-                </p>
+            <!-- Checklist -->
+            <div class="checklist">
+              <div class="check-item">
+                <div class="check-num">01</div>
+                <div class="check-body">
+                  <div class="check-title">Connect</div>
+                  <div class="check-desc">Plug the controller into a USB data port.</div>
+                </div>
+                <div class="check-badge"></div>
               </div>
-
-              <div class="installer-frame">
-                <div class="installer-label">
-                  <span>manifest.json</span>
-                  <span>secure serial</span>
+              <div class="check-item">
+                <div class="check-num">02</div>
+                <div class="check-body">
+                  <div class="check-title">Authorize</div>
+                  <div class="check-desc">Select the serial device in the browser prompt.</div>
                 </div>
-                <div class="button-shell">
-                  <esp-web-install-button manifest="manifest.json">
-                    <button class="connect-button" slot="activate">Connect Device</button>
-                  </esp-web-install-button>
-                </div>
+                <div class="check-badge"></div>
               </div>
+              <div class="check-item">
+                <div class="check-num">03</div>
+                <div class="check-body">
+                  <div class="check-title">Flash</div>
+                  <div class="check-desc">Keep the tab open until the installer confirms success.</div>
+                </div>
+                <div class="check-badge"></div>
+              </div>
+            </div>
 
-              <div class="checks" aria-label="Install checklist">
-                <div class="check">
-                  <b>01</b>
-                  <span>
-                    <strong>Connect</strong>
-                    <small>Plug in the controller.</small>
-                  </span>
-                </div>
-                <div class="check">
-                  <b>02</b>
-                  <span>
-                    <strong>Authorize</strong>
-                    <small>Select the serial device.</small>
-                  </span>
-                </div>
-                <div class="check">
-                  <b>03</b>
-                  <span>
-                    <strong>Flash</strong>
-                    <small>Keep the tab open until complete.</small>
-                  </span>
-                </div>
+            <!-- Metrics -->
+            <div class="metrics">
+              <div class="metric">
+                <div class="metric-val">USB</div>
+                <div class="metric-label">Transport</div>
+              </div>
+              <div class="metric">
+                <div class="metric-val">C3</div>
+                <div class="metric-label">Chipset</div>
+              </div>
+              <div class="metric">
+                <div class="metric-val">TLS</div>
+                <div class="metric-label">Delivery</div>
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="deck-footer" aria-label="Installer details">
-            <div class="metric">
-              <strong>USB</strong>
-              <span>Serial transport</span>
-            </div>
-            <div class="metric">
-              <strong>C3</strong>
-              <span>Target chipset</span>
-            </div>
-            <div class="metric">
-              <strong>HTTPS</strong>
-              <span>Browser required</span>
-            </div>
+        <!-- Bottom status bar -->
+        <div class="deck-bar">
+          <div class="bar-cell">
+            <span>Target</span>
+            <span>ESP32-C3</span>
           </div>
-        </section>
+          <div class="bar-cell">
+            <span>Protocol</span>
+            <span>Web Serial</span>
+          </div>
+          <div class="bar-cell">
+            <span>Interface</span>
+            <span>Blackbox v10</span>
+          </div>
+        </div>
       </main>
 
-      <footer class="footer">
-        <span>Blackbox installer interface / E-SWISS</span>
-        <code>ESP-WEB-TOOLS v10</code>
+      <!-- FOOTER -->
+      <footer>
+        <span>© E-SWISS · Blackbox Installer Interface</span>
+        <span>ESP-WEB-TOOLS v10</span>
       </footer>
     </div>
   </body>
